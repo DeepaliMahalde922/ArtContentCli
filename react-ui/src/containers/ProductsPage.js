@@ -60,15 +60,35 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
     event.preventDefault();
     const userfields = this.state;
     let payload = JSON.stringify({ data: userfields});
-    var apiBaseUrl = "https://155864b3.ngrok.io/blogarticles";
+    console.log(payload);
+    var apiBaseUrl = "https://1155b7dc.ngrok.io/blogarticles";
     var self = this;
-    axios.post(apiBaseUrl, payload)
-    .then(function (response) {
-      alert(1);
+
+    const myInit = {
+      method: 'POST',
+      //mode: 'no-cors',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+      body: payload
+    };
+    const myRequest = new Request(apiBaseUrl, myInit);
+    fetch(myRequest).then(function(response) {
+      return response;
+    }).then(function(response) {
       console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
+      if(response.status == 200){
+        alert('Your Entries has been saved.');
+      }
+      else if(response.status == 500){
+        alert('Something went worng');
+      }
+      else if(response.status == 404){
+        alert('Please fill all the fields including Product selection.');
+      }
+    }).catch(function(e){
+      console.log(e);
     });
 
   }
