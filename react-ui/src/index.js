@@ -37,6 +37,7 @@ const apiKey: ?string = REACT_APP_SHOPIFY_API_KEY || SHOPIFY_API_KEY;
 const shop: ?string = REACT_APP_SHOP_ORIGIN || SHOP_ORIGIN;
 
 const shopOrigin: ?string = shop && `https://${shop}`;
+console.log(shopOrigin);
 
 const target = document.getElementById('root');
 
