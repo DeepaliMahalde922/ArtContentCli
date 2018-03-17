@@ -42,8 +42,27 @@ type Resources = {
   products: Product[]
 };
 
+// These values are used in development. They are defined in the .env file
+const { REACT_APP_SHOPIFY_API_KEY, REACT_APP_SHOP_ORIGIN } = process.env;
+
+type environment = {
+  SHOPIFY_API_KEY?: string,
+  SHOP_ORIGIN?: string
+};
+
+const env: environment = window.env || {};
+
+// Express injects these values in the client script when serving index.html
+const { SHOPIFY_API_KEY, SHOP_ORIGIN } = env;
+
+const apiKey: ?string = REACT_APP_SHOPIFY_API_KEY || SHOPIFY_API_KEY;
+const shop: ?string = REACT_APP_SHOP_ORIGIN || SHOP_ORIGIN;
+
+const shopOrigin: ?string = shop && `https://${shop}`;
+
+
 export class ProductsPageComponent extends Component<Props, OwnState> {
-  
+
 
   constructor(props) {
     super(props);
@@ -59,45 +78,59 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
   handleSubmit(event) {
     event.preventDefault();
     const userfields = this.state;
-    let payload = JSON.stringify({ data: userfields});
-    console.log(payload);
-    var apiBaseUrl = "https://a6ca03a2.ngrok.io/blogarticles";
+    console.log(shopOrigin);
+    var dataarr = [];
+    let temp_bundled = {};
+    if(shopOrigin){
+      temp_bundled.shopUrl = shopOrigin;
+    }else{
+      temp_bundled.shopUrl = this.state.shopUrl;
+    }
+    temp_bundled.describe = this.state.describe;
+    temp_bundled.contenType = this.state.contenType;
+    temp_bundled.productData = this.state.productData;
+    temp_bundled.resourcePickerOpen = this.state.resourcePickerOpen;
+    dataarr.push(temp_bundled);
+
+    let dataarrd = JSON.stringify({ data: dataarr });
+
+    let payload = JSON.stringify({ data: userfields });
+    var apiBaseUrl = "https://daccd733.ngrok.io/api/newarticles";
     var self = this;
 
     const myInit = {
       method: 'POST',
       //mode: 'no-cors',
       headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-      body: payload
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: dataarrd
     };
     const myRequest = new Request(apiBaseUrl, myInit);
-    fetch(myRequest).then(function(response) {
+    fetch(myRequest).then(function (response) {
       return response;
-    }).then(function(response) {
-      console.log(response);
-      if(response.status == 200){
+    }).then(function (response) {
+      if (response.status == 200) {
         alert('Your Entries has been saved.');
       }
-      else if(response.status == 500){
+      else if (response.status == 500) {
         alert('Something went worng');
       }
-      else if(response.status == 404){
+      else if (response.status == 404) {
         alert('Please fill all the fields including Product selection.');
       }
-    }).catch(function(e){
+    }).catch(function (e) {
       console.log(e);
     });
 
   }
 
   handleChange = (value) => {
-    this.setState({contenType: value});
+    this.setState({ contenType: value });
   }
   handleDesChange = (describe) => {
-    this.setState({describe});
+    this.setState({ describe });
   }
 
   state = {
@@ -106,53 +139,46 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
 
   componentDidMount() {
     const { fetchProducts } = this.props;
-
     fetchProducts();
   }
 
   handleGoToProducts = () => {
     const { history } = this.props;
-
     history.push('/about');
   };
 
   handleGoToReview = () => {
     const { history } = this.props;
-
     history.push('/review');
   };
 
-  /* handleResourceSelected = (resources: Resources) => {
-    const { addProduct } = this.props;
-    const { products } = resources;
+  handleGoTolist = () => {
+    const { history } = this.props;
+    history.push('/blogservice');
+  };
 
-    addProduct(products[0]);
-
-    this.setState({ resourcePickerOpen: false });
-  }; */
   handleResourceSelected = (resources: Resources) => {
     const { addProduct } = this.props;
     const { products } = resources;
 
     let locationName = window.location.href;
     let answer_array = locationName.split('&');
-    console.log(answer_array);
     var shopUrl = '';
     answer_array.map((item, index) => {
-        if (item.indexOf("shop") !==-1) {
-          let shopattr = item.split('=');
-            shopUrl = 'https://'+shopattr[1];
-            this.setState({ shopUrl: shopUrl });  
-        }
+      if (item.indexOf("shop") !== -1) {
+        let shopattr = item.split('=');
+        shopUrl = 'https://' + shopattr[1];
+        this.setState({ shopUrl: shopUrl });
+      }
     });
 
-    
+
     if (Object.keys(products).length !== 0) {
 
       let proData = this.state.productData;
-      if(proData === '') {
+      if (proData === '') {
         var productArr = [];
-      }else{
+      } else {
         let temparr = [];
         proData.map((item, index) => {
           let temp_bundled = {};
@@ -169,17 +195,17 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
         temp_bundled.title = item.title;
         temp_bundled.producturl = item.handle;
         productArr.push(temp_bundled);
-        this.setState({ productData: productArr });  
+        this.setState({ productData: productArr });
       });
     }
-    
+
 
     addProduct(products[0]);
     this.setState({ resourcePickerOpen: false });
   };
 
   render() {
-    const {contenType} = this.state;
+    const { contenType } = this.state;
     const { products = [] } = this.props;
     const { resourcePickerOpen } = this.state;
 
@@ -198,13 +224,17 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
           {
             content: 'Go to Review',
             onAction: this.handleGoToReview
+          },
+          {
+            content: 'Go to List',
+            onAction: this.handleGoTolist
           }
         ]}
-        
+
       >
-        
-        <DisplayText size="extraLarge">ContentMark</DisplayText>        
-        
+
+        <DisplayText size="extraLarge">ContentMark</DisplayText>
+
         <ResourcePicker products open={resourcePickerOpen} onSelection={this.handleResourceSelected} onCancel={() => this.setState({ resourcePickerOpen: false })} allowMultiple={true} />
 
         <Layout sectioned>
@@ -220,24 +250,24 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
           </Layout.Section>
 
           <Layout.Section>
-              <Card sectioned title="Type of Content" >
+            <Card sectioned title="Type of Content" >
 
-                <ChoiceList
-                    title="Type of Choices"
-                  choices={[
-                    { label: 'How To Article', value: 'howto', },
-                    { label: 'Best Of Article', value: 'experience', },
-                    { label: 'Required', value: 'required', },
-                  ]}
-                  selected={contenType}
-                  onChange={this.handleChange}
-                />
-              </Card>
+              <ChoiceList
+                title="Type of Choices"
+                choices={[
+                  { label: 'How To Article', value: 'howto', },
+                  { label: 'Best Of Article', value: 'experience', },
+                  { label: 'Required', value: 'required', },
+                ]}
+                selected={contenType}
+                onChange={this.handleChange}
+              />
+            </Card>
           </Layout.Section>
 
           <Layout.Section secondary>
-              <Card title="Please describe what kind of article you would like written" sectioned >
-              <TextField label="Please describe"  name="describe" value={this.state.describe} onChange={this.handleDesChange} />
+            <Card title="Please describe what kind of article you would like written" sectioned >
+              <TextField label="Please describe" name="describe" value={this.state.describe} onChange={this.handleDesChange} multiline/>
             </Card>
           </Layout.Section>
 
