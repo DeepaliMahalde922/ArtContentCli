@@ -63,7 +63,7 @@ class BlogService extends React.Component {
     temp_bundled.content = this.state.content;
     dataarr.push(temp_bundled);
     let dataarrd = JSON.stringify({ data: dataarr });
-     var apiBaseUrl = "https://daccd733.ngrok.io/api/generatearticle";
+     var apiBaseUrl = "https://5739210b.ngrok.io/api/generatearticle";
     var self = this;
     const myInit = {
       method: 'POST',
@@ -94,7 +94,7 @@ class BlogService extends React.Component {
 
   componentDidMount() {
     var self = this;
-    const apiUrl = "https://daccd733.ngrok.io/api/getarticles";
+    const apiUrl = "https://5739210b.ngrok.io/api/getarticles";
 
     const myInit = {
       method: 'GET',

@@ -13,7 +13,7 @@
     "sequelize": "node_modules/.bin/sequelize",
     "server:dev": "cross-env NODE_ENV=development nodemon",
     "start:dev": "concurrently \"npm run server:dev\" \"cd react-ui/ && npm start\"",
-    "start": "concurrently \"npm run server:dev\" \"cd react-ui/ && npm start\"",
+    "start": "cross-env NODE_ENV=production node compiled/server.js",
     "test:client": "cd react-ui/ && npm test",
     "test:server": "jest --watch",
     "test": "cross-env CI=true npm run test:client && jest  --forceExit",

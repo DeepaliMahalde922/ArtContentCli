@@ -98,6 +98,15 @@ app.get('/api/products', (req, res) => {
   });
 });
 
+
+/* app.get('/api/appcharges', function (req, res) {
+  var shopify = req.shopify;
+  console.log(dbcon);
+   const query = client.query('SELECT * FROM blogList'); 
+  res.status(200).json(shopify);
+}); */
+
+
 app.get('*', (req, res, next) => {
   const { shop } = req.session.shopify || {};
 

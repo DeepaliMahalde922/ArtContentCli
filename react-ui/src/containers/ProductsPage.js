@@ -95,7 +95,7 @@ export class ProductsPageComponent extends Component<Props, OwnState> {
     let dataarrd = JSON.stringify({ data: dataarr });
 
     let payload = JSON.stringify({ data: userfields });
-    var apiBaseUrl = "https://daccd733.ngrok.io/api/newarticles";
+    var apiBaseUrl = "https://5739210b.ngrok.io/api/newarticles";
     var self = this;
 
     const myInit = {

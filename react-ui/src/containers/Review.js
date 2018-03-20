@@ -46,7 +46,7 @@ class BlogService extends React.Component {
       this.setState({ requestId: requestid });
 
       var self = this;
-    const apiUrl = "https://daccd733.ngrok.io/api/article/:"+requestid;
+    const apiUrl = "https://5739210b.ngrok.io/api/article/:"+requestid;
 
     const myInit = {
       method: 'GET',
@@ -149,7 +149,7 @@ var apiBaseUrl = shopOrigin+"/admin/application_charges.json";
     
      
     let dataRev = JSON.stringify({ data: revsionDes });
-    var apiBaseUrl = "https://daccd733.ngrok.io/api/updatearticles/:"+requestid;
+    var apiBaseUrl = "https://5739210b.ngrok.io/api/updatearticles/:"+requestid;
     var self = this;
 
     const myInit = {
