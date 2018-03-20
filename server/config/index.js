@@ -7,7 +7,7 @@ export const isTest = ENV === 'test';
 export const SCOPES = 'read_orders,read_products';
 export const ACTIVATE_CHARGE_ROUTE = '/activate_charge';
 export const APP_NAME = 'testapp999';
-export const APP_URL = 'artcontent.herokuapp.com';
+export const APP_URL = 'https://artcontent.herokuapp.com';
 export const APP_HOME_ROUTE = '/home';
 export const AUTH_CALLBACK_ROUTE = '/auth/callback';
 export const INSTALL_PAGE = `https://apps.shopify.com/${APP_NAME}`;
